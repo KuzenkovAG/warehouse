@@ -42,9 +42,10 @@ async def init_daemons(container: DeclarativeContainer) -> dict[str, asyncio.Tas
 
     await container.init_resources()  # type: ignore[misc]
 
-    for daemon in await container.daemons.init():  # type: ignore[misc, attr-defined]
-        daemons[daemon.__name__] = asyncio.create_task(daemon)
-        info(f"Daemon: {daemon.__name__} is working")
+    if hasattr(container, "daemons"):
+        for daemon in await container.daemons.init():  # type: ignore[misc, attr-defined]
+            daemons[daemon.__name__] = asyncio.create_task(daemon)
+            info(f"Daemon: {daemon.__name__} is working")
 
     return daemons
 

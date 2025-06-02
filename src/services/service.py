@@ -1,9 +1,11 @@
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from infrastructure.infrastructure import Infrastructure
 from services.movements_service import MovementsService
 from services.warehouses_service import WarehousesService
+from utils.daemon import Daemon
 
 
 class Service:
@@ -46,10 +48,9 @@ class Service:
     # ---------- Daemon logic ----------
 
     @Daemon()
-    async def starting_listening_events(self) -> None:
+    async def starting_saving_events(self) -> None:
         """Запуск задачи на подключение к очереди и получение сообщений из очереди."""
-        async for events in self.infra.listen_for_events():
-            ...
+        ...
 
     # ---------- Kubernetes logic ----------
 
