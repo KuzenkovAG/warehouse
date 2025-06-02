@@ -1,0 +1,9 @@
+from infrastructure.repositories.base_repository import BaseRepository
+
+
+class WarehousesRepository(BaseRepository):
+    async def select(self): ...
+
+    async def add(self): ...
+
+    async def update(self): ...

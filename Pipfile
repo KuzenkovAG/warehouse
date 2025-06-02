@@ -1,0 +1,23 @@
+[packages]
+fastapi = "*"
+uvicorn = "*"
+uvloop = "*"
+pydantic = "*"
+pydantic-settings = "*"
+dependency-injector = "*"
+loguru = "*"
+orjson = "*"
+yarl = "*"
+httpx = "*"
+starlette-prometheus = "*"
+cachetools = "*"
+aiokafka = "*"
+mypy = "*"
+ruff = "*"
+sqlalchemy = "*"
+alembic = "*"
+
+[requires]
+python_version = "3.12"
+
+[dev-packages]
