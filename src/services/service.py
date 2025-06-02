@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -50,7 +49,6 @@ class Service:
     @Daemon()
     async def starting_saving_events(self) -> None:
         """Запуск задачи на подключение к очереди и получение сообщений из очереди."""
-        ...
 
     # ---------- Kubernetes logic ----------
 

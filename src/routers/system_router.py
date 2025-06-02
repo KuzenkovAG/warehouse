@@ -4,7 +4,7 @@ from starlette import status
 from starlette.responses import Response
 from starlette_prometheus import metrics
 
-from dependencies import ViewContainer, DaemonContainer
+from dependencies import DaemonContainer, ViewContainer
 from services.service import Service
 
 router = APIRouter(tags=["System"])

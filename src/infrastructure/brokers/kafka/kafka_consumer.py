@@ -25,7 +25,8 @@ class KafkaConsumer:
             raise e
 
     async def commit(self, data: dict):
-        """Подтверждает смещение.
+        """
+        Подтверждает смещение.
 
         :param data: Данные о смещении.
         :return: None
