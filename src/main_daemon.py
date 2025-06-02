@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from application import create_application, init_daemons, shutdown_resources
-from dependencies import HandlerContainer
+from dependencies import DaemonContainer
 from routers import system_router
 from utils.logger import info
 
@@ -19,8 +19,8 @@ def include_routers(application: FastAPI) -> None:
     application.include_router(system_router.router)
 
 
-def inject_dependencies() -> HandlerContainer:
-    container = HandlerContainer()
+def inject_dependencies() -> DaemonContainer:
+    container = DaemonContainer()
     container.check_dependencies()
 
     container.wire(modules=[system_router])

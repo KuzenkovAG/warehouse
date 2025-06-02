@@ -1,5 +1,4 @@
 import sys
-from collections.abc import Callable
 from typing import Any
 
 from loguru import logger
@@ -23,18 +22,6 @@ logger.add(
     diagnose=True,
     level=settings.LOG_LEVEL,
 )
-
-
-def property_logger(func: Callable) -> Any:
-    @property  # type: ignore[misc]
-    def wrapper(*args: Any, **kwargs: Any) -> Any:  # noqa:PLR0206
-        result = func(*args, **kwargs)
-        if not result:
-            msg = f"Probe {func.__name__} from {func.__module__} return {result}"
-            logger.debug(msg)
-        return result
-
-    return wrapper
 
 
 def debug(*args: Any, **kwargs: Any) -> None:
@@ -65,4 +52,4 @@ def exception(*args: Any, **kwargs: Any) -> None:
     logger.exception(*args, **kwargs)
 
 
-__all__ = ["debug", "error", "exception", "info", "property_logger", "success", "trace", "warning"]
+__all__ = ["debug", "error", "exception", "info", "success", "trace", "warning"]

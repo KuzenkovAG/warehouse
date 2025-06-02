@@ -1,11 +1,10 @@
-
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.responses import Response
 from starlette_prometheus import metrics
 
-from dependencies import VehiclesDaemonContainer, ViewContainer
+from dependencies import DaemonContainer, ViewContainer
 from services.service import Service
 
 router = APIRouter(tags=["System"])
@@ -15,7 +14,7 @@ router.add_route("/metrics", metrics)
 @inject
 async def get_service(
     view_service: Service = Depends(Provide[ViewContainer.service]),
-    daemon_service: Service = Depends(Provide[VehiclesDaemonContainer.service]),
+    daemon_service: Service = Depends(Provide[DaemonContainer.service]),
 ) -> Service:
     if not isinstance(view_service, Provide):
         return view_service

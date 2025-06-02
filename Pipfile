@@ -16,6 +16,7 @@ mypy = "*"
 ruff = "*"
 sqlalchemy = "*"
 alembic = "*"
+asyncpg = "*"
 
 [requires]
 python_version = "3.12"
