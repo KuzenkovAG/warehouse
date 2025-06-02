@@ -1,36 +1,5 @@
 # We use the official image of Python 3.12 based on Alpine Linux
-FROM dts.ickamaz.ru/infra/python:3.12-alpine
-
-# Set an environment variable to disable Python output buffering
-ENV PYTHONUNBUFFERED=1
-
-# Define arguments for authentication in PyPI and Nexus
-ARG PYPI_USERNAME
-ARG PYPI_PASSWORD
-ARG NEXUS_HOST
-ARG NEXUS_PYPI_USER
-ARG NEXUS_PYPI_PASSWORD
-
-# Set these arguments as environment variables
-ENV PYPI_USERNAME=$PYPI_USERNAME \
-    PYPI_PASSWORD=$PYPI_PASSWORD \
-    NEXUS_HOST=$NEXUS_HOST \
-    NEXUS_PYPI_USER=$NEXUS_PYPI_USER \
-    NEXUS_PYPI_PASSWORD=$NEXUS_PYPI_PASSWORD
-
-# Define arguments for GitLab CI
-ARG GITLAB_CI_PROJECT_ID
-ARG GITLAB_CI_PROJECT_URL
-ARG GITLAB_CI_PROJECT_TITLE
-ARG GITLAB_CI_PIPELINE_ID
-ARG GITLAB_CI_PIPELINE_URL
-ARG GITLAB_CI_COMMIT_TAG
-ENV CI_PROJECT_ID=$GITLAB_CI_PROJECT_ID \
-    CI_PROJECT_URL=$GITLAB_CI_PROJECT_URL \
-    CI_PROJECT_TITLE=$GITLAB_CI_PROJECT_TITLE \
-    CI_PIPELINE_ID=$GITLAB_CI_PIPELINE_ID \
-    CI_PIPELINE_URL=$GITLAB_CI_PIPELINE_URL \
-    CI_COMMIT_TAG=$GITLAB_CI_COMMIT_TAG
+FROM python:3.12-alpine
 
 # Update the system and install the necessary dependencies
 RUN apk update && apk add --no-cache \
@@ -59,10 +28,6 @@ COPY src /opt/app/
 COPY docker-entrypoint.sh /opt/app/
 COPY Pipfile /opt/app/
 COPY Pipfile.lock /opt/app/
-COPY mypy.ini /opt/app/
-COPY ruff.toml /opt/app/
-COPY pytest.ini /opt/app/
-COPY coverage.ini /opt/app/
 
 # Set the working directory
 WORKDIR /opt/app/
