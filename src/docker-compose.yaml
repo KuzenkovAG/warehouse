@@ -1,0 +1,71 @@
+name: warehouses
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=test_${PG_DB}
+    ports:
+      - "${PG_PORT}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d test_${PG_DB} -U ${PG_USER}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - app_network
+
+  zookeeper1:
+    image: confluentinc/cp-zookeeper:7.5.1
+    container_name: zookeeper1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 1
+    volumes:
+      - zookeeper1-data:/var/lib/zookeeper/data
+      - zookeeper1-log:/var/lib/zookeeper/log
+    networks:
+      - kafka-net1
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.5.1
+    container_name: kafka1
+    depends_on:
+      - zookeeper1
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+    volumes:
+      - kafka1-data:/var/lib/kafka/data
+    networks:
+      - kafka-net1
+
+volumes:
+  postgres_data:
+  kafka1-data:
+  zookeeper1-data:
+  zookeeper1-log:
+
+networks:
+  app_network:
+    driver: bridge
+  kafka-net1:
+    driver: bridge
