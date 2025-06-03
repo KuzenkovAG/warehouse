@@ -1,4 +1,6 @@
 from enum import StrEnum
 
 
-class EventType(StrEnum): ...
+class MovementType(StrEnum):
+    arrival = "arrival"
+    departure = "departure"

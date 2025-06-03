@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from infrastructure.brokers.broker import Broker
 from infrastructure.repositories.repository import Repository
+from models.movements import Movement
 
 
 class Infrastructure:
@@ -28,3 +29,7 @@ class Infrastructure:
     async def single_transaction(self):
         async with self.repository.single_transaction() as st_repository:
             yield Infrastructure(st_repository, self.broker)
+
+    async def getting_events(self):
+        async for events in self.broker.getting_events():
+            yield [Movement(**event.get("data")) for event in events if event.get("data")]

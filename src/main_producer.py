@@ -1,0 +1,100 @@
+import asyncio
+import random
+import uuid
+from datetime import datetime
+from typing import Any
+
+import orjson
+from aiokafka import AIOKafkaProducer
+
+from settings import settings
+
+PRODUCTS = [
+    "675e5a9b-c02e-4785-8d0a-360b163077c9",
+    "bda756a0-3d02-4606-bdea-1a7e01d8f4ac",
+    "955e934a-691f-4c5b-9cf1-6c434d02272d",
+    "92e8b000-4474-47b5-a811-8232393ae6e3",
+    "9ced56d7-fd1c-4f61-858b-bb4ecbc8713a",
+]
+WAREHOUSES = [
+    "7d5bbb85-f0e3-48ef-b958-11d9816d65f0",
+    "5f9f65f6-3d9f-4c6b-b6f4-293dafa0ec6f",
+    "18792e65-40ea-4f36-b988-8ce975fd7731",
+    "8943b17f-4e0a-4906-9dc1-e8715a3f43ca",
+    "08ff8a3e-53a8-431e-aafc-5ad420b919c4",
+]
+QUANTITY = list(range(1, 100))
+
+
+def _gen_message(
+    movement_id,
+    product_id,
+    warehouse_id,
+    quantity,
+    event,
+) -> dict[str, Any]:
+    id_ = uuid.uuid4()
+    time_ = datetime.now()
+    return {
+        "id": id_,
+        "source": "WH-3423",
+        "specversion": "1.0",
+        "type": "ru.retail.warehouses.movement",
+        "datacontenttype": "application/json",
+        "dataschema": "ru.retail.warehouses.movement.v1.0",
+        "time": time_.timestamp(),
+        "subject": "WH-3423:ARRIVAL",
+        "destination": "ru.retail.warehouses",
+        "data": {
+            "movement_id": movement_id,
+            "warehouse_id": warehouse_id,
+            "timestamp": time_.isoformat(),
+            "event": event,
+            "product_id": product_id,
+            "quantity": quantity,
+        },
+    }
+
+
+def get_messages() -> list[dict]:
+    movement_id = uuid.uuid4()
+    product_id = random.choice(PRODUCTS)
+    warehouse_id_dep = random.choice(WAREHOUSES)
+    warehouse_id_arr = random.choice([wh for wh in WAREHOUSES if wh != warehouse_id_dep])
+    quantity = random.choice(QUANTITY)
+
+    return [
+        _gen_message(movement_id, product_id, warehouse_id_arr, quantity, "arrival"),
+        _gen_message(movement_id, product_id, warehouse_id_dep, quantity, "departure"),
+    ]
+
+
+async def send_message(producer):
+    while True:
+        try:
+            messages = get_messages()
+            for msg in messages:
+                await producer.send_and_wait(
+                    topic=settings.KAFKA_READING_TOPICS[0],
+                    value=orjson.dumps(msg),
+                )
+            await asyncio.sleep(1)
+        except asyncio.CancelledError:
+            print("stop send message")
+            break
+
+
+async def main():
+    producer = AIOKafkaProducer(
+        bootstrap_servers=settings.KAFKA_BOOTSTRAP,
+    )
+
+    await producer.start()
+    try:
+        await send_message(producer)
+    finally:
+        await producer.stop()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
