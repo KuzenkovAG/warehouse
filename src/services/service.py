@@ -2,6 +2,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from infrastructure.infrastructure import Infrastructure
+from models.movements import Movement
 from services.movements_service import MovementsService
 from services.warehouses_service import WarehousesService
 from utils.daemon import Daemon
@@ -41,7 +42,6 @@ class Service:
                         strict=False,
                     )
                 ],
-                publisher=self.publisher,  # type: ignore[misc]
             )
 
     # ---------- Daemon logic ----------
@@ -49,6 +49,15 @@ class Service:
     @Daemon()
     async def starting_saving_events(self) -> None:
         """Запуск задачи на подключение к очереди и получение сообщений из очереди."""
+        async for movements in self.infra.getting_events():
+            await self.handle_movements(movements)
+
+    async def handle_movements(self, movements: list[Movement]) -> None:
+        """Обработка полученных событий перемещений продуктов."""
+        st_service: Service
+
+        async with self.st_service() as st_service:
+            await st_service.movements.save(movements)
 
     # ---------- Kubernetes logic ----------
 

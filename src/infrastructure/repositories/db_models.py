@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, MetaData, Table
 from sqlalchemy.dialects.postgresql import ENUM, UUID
 
 from utils.enums import (
-    EventType,
+    MovementType,
 )
 
 metadata = MetaData()
@@ -15,7 +15,7 @@ movements_table = Table(
     Column("warehouse_id", UUID(as_uuid=True), nullable=False),
     Column("product_id", UUID(as_uuid=True), nullable=False),
     Column("timestamp", DateTime, nullable=False),
-    Column("event", ENUM(EventType), nullable=False),
+    Column("event", ENUM(MovementType), nullable=False),
     Column("quantity", Integer, nullable=False),
     Column("created_at", DateTime, nullable=False),
     Column("updated_at", DateTime, nullable=False),

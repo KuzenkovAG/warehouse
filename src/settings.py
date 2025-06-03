@@ -1,4 +1,4 @@
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, AsyncIterable
 
 import aiokafka
 from pydantic import Field
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
 
     # kafka consumer
     KAFKA_READING_TOPICS: list[str] = Field(default_factory=list)
-    KAFKA_BOOTSTRAP: str = Field(default="kafka1")
+    KAFKA_BOOTSTRAP: str = Field(default="127.0.0.1:29092")
     KAFKA_CONSUMER_NAME: str = Field(default="movements-collector")
     KAFKA_OFFSET: str = Field(default="latest")
     KAFKA_RETRY_BACKOFF: int = Field(default=1)
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     KAFKA_TIMEOUT_MS: int = Field(default=6000)
     KAFKA_BATCH_SIZE: int = Field(default=1000)
 
-    async def get_kafka_consumer(self):
+    async def get_kafka_consumer(self) -> AsyncIterable[aiokafka.AIOKafkaConsumer]:
         consumer = aiokafka.AIOKafkaConsumer(
             *self.KAFKA_READING_TOPICS,
             bootstrap_servers=self.KAFKA_BOOTSTRAP,

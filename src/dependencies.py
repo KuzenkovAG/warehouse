@@ -54,7 +54,7 @@ class DaemonContainer(BaseContainer):
     kafka = providers.Singleton(Kafka, kafka_consumer)
 
     # broker
-    broker = providers.Singleton(Broker, kafka_consumer)
+    broker = providers.Singleton(Broker, kafka)
 
     # infra
     infra = providers.Singleton(
