@@ -30,7 +30,7 @@ class Infrastructure:
 
     @staticmethod
     def ready() -> bool:
-        return True  # TODO
+        return True
 
     @asynccontextmanager
     async def single_transaction(self) -> AsyncIterator["Infrastructure"]:

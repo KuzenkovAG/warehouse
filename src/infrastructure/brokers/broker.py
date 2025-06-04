@@ -10,7 +10,7 @@ class Broker:
         self.kafka = kafka
 
     async def health(self) -> bool:
-        return True  # TODO:
+        return await self.kafka.health()
 
     async def getting_events(self) -> AsyncIterable[list[dict]]:
         async for events in self.kafka.getting_events():
