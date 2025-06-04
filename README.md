@@ -1,6 +1,7 @@
 <!-- TOC -->
 * [Установка инфраструктуры](#установка-инфраструктуры)
 * [Мониторинг за сервисом](#мониторинг-за-сервисом)
+* [Кеширование](#кеширование)
 <!-- TOC -->
 
 
@@ -21,4 +22,12 @@ GET /readyz
 GET /metrics
 
 movements_stored_counter - отражает количество прочитанных сообщений
+```
+
+# Кеширование
+Реализовано кеширование в оперативной памяти
+```python
+    @AsyncCache(maxsize=settings.MOVEMENT_CACHE_SIZE, ttl=settings.MOVEMENT_CACHE_EXPIRATION)
+    async def get_movement(self, item: MovementFilter) -> list[MovementOutput]:
+        ...
 ```
