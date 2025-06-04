@@ -2,7 +2,7 @@ from sqlalchemy import and_
 
 from infrastructure.repositories.base_repository import BaseRepository
 from infrastructure.repositories.db_models import warehouses_table
-from models.product import ProductOutput, ProductFilter
+from models.product import ProductFilter, ProductOutput
 
 
 class WarehousesRepository(BaseRepository):

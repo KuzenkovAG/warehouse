@@ -40,7 +40,7 @@ class MovementFilter(BaseModel):
 class MovementInfo(BaseModel):
     sender: Warehouse | None = None
     receiver: Warehouse | None = None
-    product_id: UUID
+    product_id: UUID | None = None
     quantity: int
     send_dt: datetime | None = None
     receive_dt: datetime | None = None
@@ -54,7 +54,6 @@ class MovementInfo(BaseModel):
         :param movements: Перемещения
         :return: Объединенный результат
         """
-
         arrivals = [movement for movement in movements if movement.event == MovementType.arrival]
         departures = [movement for movement in movements if movement.event == MovementType.departure]
 
@@ -62,10 +61,10 @@ class MovementInfo(BaseModel):
         departure = departures[0] if departures else None
 
         return cls(
-            sender={"source": departure.source, "warehouse_id": departure.warehouse_id} if departure else None,
-            receiver={"source": arrival.source, "warehouse_id": arrival.warehouse_id} if arrival else None,
-            product_id=arrival.product_id if arrival else departure.product_id,
-            quantity=arrival.quantity if arrival else departure.quantity,
+            sender=Warehouse(source=departure.source, warehouse_id=departure.warehouse_id) if departure else None,
+            receiver=Warehouse(source=arrival.source, warehouse_id=arrival.warehouse_id) if arrival else None,
+            product_id=arrival.product_id if arrival else departure.product_id if departure else None,
+            quantity=arrival.quantity if arrival else departure.quantity if departure else 0,
             send_dt=departure.timestamp if departure else None,
             receive_dt=arrival.timestamp if arrival else None,
             delivery_time_sec=(arrival.timestamp - departure.timestamp).seconds if arrival and departure else None,

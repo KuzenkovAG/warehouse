@@ -4,7 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Path
 
 from dependencies import ViewContainer
-from models.movements import MovementFilter, MovementOutput, MovementInfo
+from models.movements import MovementFilter, MovementInfo
 from services.movements_service import MovementsService
 
 router = APIRouter(prefix="/api/movements", tags=["Movements"])

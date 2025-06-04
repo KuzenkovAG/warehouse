@@ -1,12 +1,11 @@
 import asyncio
 import random
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 import orjson
 from aiokafka import AIOKafkaProducer
-from asyncpg.pgproto.pgproto import timedelta
 
 from settings import settings
 

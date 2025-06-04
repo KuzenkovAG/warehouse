@@ -1,5 +1,5 @@
 from infrastructure.repositories.warehouses_repository import WarehousesRepository
-from models.product import ProductOutput, ProductFilter
+from models.product import ProductFilter, ProductOutput
 from services.base_service import BaseService
 from settings import settings
 from utils.cache import AsyncCache

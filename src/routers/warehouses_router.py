@@ -4,7 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Path
 
 from dependencies import ViewContainer
-from models.product import ProductOutput, ProductFilter
+from models.product import ProductFilter, ProductOutput
 from services.warehouses_service import WarehousesService
 
 router = APIRouter(prefix="/api/warehouses", tags=["Warehouses"])

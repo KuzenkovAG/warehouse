@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, MetaData, Table, String
+from sqlalchemy import Boolean, Column, DateTime, Integer, MetaData, String, Table
 from sqlalchemy.dialects.postgresql import ENUM, UUID
 
 from utils.enums import (

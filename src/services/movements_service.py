@@ -1,5 +1,5 @@
 from infrastructure.repositories.movements_repository import MovementsRepository
-from models.movements import Movement, MovementFilter, MovementOutput, MovementInfo
+from models.movements import Movement, MovementFilter, MovementInfo
 from services.base_service import BaseService
 from settings import settings
 from utils.cache import AsyncCache
