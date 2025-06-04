@@ -28,8 +28,8 @@ QUANTITY = list(range(1, 100))
 
 def _gen_message(
     movement_id: uuid.UUID,
-    product_id: uuid.UUID,
-    warehouse_id: uuid.UUID,
+    product_id: str,
+    warehouse_id: str,
     quantity: int,
     event: str,
 ) -> dict[str, Any]:

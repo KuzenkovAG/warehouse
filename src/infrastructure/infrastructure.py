@@ -8,11 +8,11 @@ from models.movements import Movement
 
 class Infrastructure:
     repository: Repository
-    broker: Broker | None
+    _broker: Broker | None
 
     def __init__(self, repository: Repository, broker: Broker | None = None):
         self.repository = repository
-        self.broker = broker
+        self._broker = broker
 
     async def health(self) -> bool:
         return all(
@@ -21,6 +21,12 @@ class Infrastructure:
                 await self.broker.health() if self.broker else True,
             ]
         )
+
+    @property
+    def broker(self) -> Broker:
+        if not self._broker:
+            raise AttributeError("Absent broker")
+        return self._broker
 
     @staticmethod
     def ready() -> bool:
@@ -33,4 +39,4 @@ class Infrastructure:
 
     async def getting_events(self) -> AsyncIterator[list[Movement]]:
         async for events in self.broker.getting_events():
-            yield [Movement(**event.get("data")) for event in events if event.get("data")]
+            yield [Movement(**event.get("data", {})) for event in events if event.get("data")]

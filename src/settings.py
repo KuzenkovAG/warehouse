@@ -17,11 +17,11 @@ class Settings(BaseSettings):
     TESTING: bool = Field(default=False)
 
     # db
-    PG_HOST: str
+    PG_HOST: str = Field(default="0.0.0.0")
     PG_PORT: int = Field(default=5432)
-    PG_DB: str
-    PG_USER: str
-    PG_PASSWORD: str
+    PG_DB: str = Field(default="db")
+    PG_USER: str = Field(default="user")
+    PG_PASSWORD: str = Field(default="strong_password")
 
     @property
     def pg_db(self) -> str:
