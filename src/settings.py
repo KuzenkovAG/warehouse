@@ -67,6 +67,12 @@ class Settings(BaseSettings):
     # logger
     LOG_LEVEL: int = Field(default=5)
 
+    # Caching
+    MOVEMENT_CACHE_SIZE: int = Field(default=600)
+    PRODUCT_CACHE_SIZE: int = Field(default=600)
+    MOVEMENT_CACHE_EXPIRATION: int = Field(default=30)
+    PRODUCT_CACHE_EXPIRATION: int = Field(default=30)
+
     # Daemons
     DAEMON_RESTART_SEC: int = Field(default=4)
 

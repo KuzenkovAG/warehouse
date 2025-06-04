@@ -26,3 +26,6 @@ class Movement(BaseMovement): ...
 
 class MovementFilter(BaseModel):
     movement_id: UUID
+
+    def __hash__(self):
+        return hash(str(self.movement_id))
