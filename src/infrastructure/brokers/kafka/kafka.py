@@ -19,6 +19,5 @@ class Kafka:
         """Получение сообщений батчами."""
         while True:
             results = await self.consumer.get_batch()
-            for tp, messages in results.items():
+            for messages in results.values():
                 yield [orjson.loads(msg.value) for msg in messages]
-                await self.consumer.commit({tp: messages[-1].offset + 1})

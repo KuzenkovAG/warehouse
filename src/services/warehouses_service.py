@@ -8,6 +8,7 @@ class WarehousesService(BaseService):
     repository: WarehousesRepository
 
     async def get_product(self, item: WarehouseFilter) -> ProductOutput:
+        """Получение продукта"""
         product = await self.repository.select_product(item)
         if not product:
             raise AbsentProductError

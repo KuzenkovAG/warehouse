@@ -7,6 +7,7 @@ from utils.enums import MovementType
 
 
 class BaseMovement(BaseModel):
+    id: UUID
     movement_id: UUID
     warehouse_id: UUID
     product_id: UUID
@@ -16,7 +17,6 @@ class BaseMovement(BaseModel):
 
 
 class MovementOutput(BaseMovement):
-    id: UUID
     created_at: datetime
     updated_at: datetime
 

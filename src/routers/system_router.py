@@ -16,9 +16,9 @@ async def get_service(
     view_service: Service = Depends(Provide[ViewContainer.service]),
     daemon_service: Service = Depends(Provide[DaemonContainer.service]),
 ) -> Service:
-    if not isinstance(view_service, Provide):
+    if isinstance(view_service, Service):
         return view_service
-    elif not isinstance(daemon_service, Provide):
+    elif isinstance(daemon_service, Service):
         return daemon_service
     raise TypeError("Got unknown service")
 

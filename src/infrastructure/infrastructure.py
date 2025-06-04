@@ -18,7 +18,7 @@ class Infrastructure:
         return all(
             [
                 await self.repository.health(),
-                await self.broker.health() if self.broker else True,
+                await self.broker.health() if self._broker else True,
             ]
         )
 

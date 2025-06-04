@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     TESTING: bool = Field(default=False)
 
     # db
-    PG_HOST: str = Field(default="0.0.0.0")
+    PG_HOST: str = Field(default="localhost")
     PG_PORT: int = Field(default=5432)
     PG_DB: str = Field(default="db")
     PG_USER: str = Field(default="user")
@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     KAFKA_CONSUMER_NAME: str = Field(default="movements-collector")
     KAFKA_OFFSET: str = Field(default="latest")
     KAFKA_RETRY_BACKOFF: int = Field(default=1)
-    KAFKA_AUTO_COMMIT: bool = Field(default=False)
+    KAFKA_AUTO_COMMIT: bool = Field(default=True)
 
     KAFKA_TIMEOUT_MS: int = Field(default=6000)
     KAFKA_BATCH_SIZE: int = Field(default=1000)

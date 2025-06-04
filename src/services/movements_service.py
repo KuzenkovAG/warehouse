@@ -8,10 +8,12 @@ class MovementsService(BaseService):
     repository: MovementsRepository
 
     async def get_movement(self, item: MovementFilter) -> list[MovementOutput]:
-        movements = await self.repository.select(item)
+        """Получение перемещение"""
+        movements = await self.repository.select_movements(item)
         if not movements:
             raise AbsentMovementError
         return movements
 
     async def save(self, movements: list[Movement]) -> None:
+        """Сохранение перемещения."""
         await self.repository.add(movements)

@@ -10,14 +10,14 @@ from infrastructure.repositories.database import Database
 
 class BaseRepository:
     @classmethod
-    def override(cls, overridden_database: Database):
+    def override(cls, overridden_database: Database):  # noqa:ANN206
         return cls(overridden_database)
 
     def __init__(self, database: Database):
         self.database = database
 
     @asynccontextmanager
-    async def single_transaction(self):
+    async def single_transaction(self):  # noqa:ANN201
         async with self.database.single_transaction() as st_database:
             yield type(self)(st_database)
 
