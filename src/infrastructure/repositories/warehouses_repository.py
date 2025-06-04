@@ -1,9 +1,21 @@
+from sqlalchemy import and_
+
 from infrastructure.repositories.base_repository import BaseRepository
+from infrastructure.repositories.db_models import warehouses_table
+from models.warehouses import ProductOutput, WarehouseFilter
 
 
 class WarehousesRepository(BaseRepository):
-    async def select(self): ...
+    async def select_product(self, item: WarehouseFilter) -> ProductOutput | None:
+        query = warehouses_table.select().where(
+            and_(
+                warehouses_table.c.warehouse_id == item.warehouse_id,
+                warehouses_table.c.product_id == item.product_id,
+                warehouses_table.c.is_active.is_(True),
+            )
+        )
 
-    async def add(self): ...
+        async with self.conn() as conn:
+            row = (await conn.execute(query)).mappings().one_or_none()
 
-    async def update(self): ...
+        return ProductOutput(**row) if row else None

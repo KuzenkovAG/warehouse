@@ -1,3 +1,4 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from infrastructure.repositories.database import Database
@@ -21,13 +22,13 @@ class Repository:
         return await self._database.is_connected()
 
     @property
-    def sub_repositories(self):
+    def sub_repositories(self) -> tuple:
         return (
             self.movements,
             self.warehouses,
         )
 
     @asynccontextmanager
-    async def single_transaction(self):
+    async def single_transaction(self) -> AsyncIterator["Repository"]:
         async with self._database.single_transaction() as st_database:
             yield Repository(st_database, *[repo.override(st_database) for repo in self.sub_repositories])

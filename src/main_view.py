@@ -5,7 +5,8 @@ from fastapi import FastAPI
 
 from application import create_application, init_daemons, shutdown_resources
 from dependencies import ViewContainer
-from routers import system_router
+from routers.routers import routers
+from utils.http_exceptions import set_exceptions_handler
 from utils.logger import info
 
 
@@ -14,16 +15,19 @@ def add_middleware(application: FastAPI) -> None:
 
     application.add_middleware(PrometheusMiddleware)
 
+    set_exceptions_handler(application)
+
 
 def include_routers(application: FastAPI) -> None:
-    application.include_router(system_router.router)
+    for router in routers:
+        application.include_router(router.router)
 
 
 def inject_dependencies() -> ViewContainer:
     container = ViewContainer()
     container.check_dependencies()
 
-    container.wire(modules=[system_router])
+    container.wire(modules=routers)
     return container
 
 

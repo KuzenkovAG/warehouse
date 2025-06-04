@@ -6,10 +6,7 @@ from loguru import logger
 from settings import settings
 
 simple_formatter = (
-    "<green>{time:YYYY-MM-DD HH:mm:ss}</green> "
-    "[<cyan>{name}</cyan>] "
-    "<level>{level.icon} {level}</level>: "
-    "<level>{message}</level> "
+    "<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level.icon} {level}</level>: <level>{message}</level> "
 )
 
 logger.remove()
