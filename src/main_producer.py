@@ -6,6 +6,7 @@ from typing import Any
 
 import orjson
 from aiokafka import AIOKafkaProducer
+from asyncpg.pgproto.pgproto import timedelta
 
 from settings import settings
 
@@ -32,9 +33,9 @@ def _gen_message(
     warehouse_id: str,
     quantity: int,
     event: str,
+    time_: datetime,
 ) -> dict[str, Any]:
     id_ = uuid.uuid4()
-    time_ = datetime.now()
     return {
         "id": id_,
         "source": "WH-3423",
@@ -63,9 +64,12 @@ def get_messages() -> list[dict]:
     warehouse_id_arr = random.choice([wh for wh in WAREHOUSES if wh != warehouse_id_dep])  # noqa:S311
     quantity = random.choice(QUANTITY)  # noqa:S311
 
+    send_time = datetime.now()
+    receive_time = send_time + timedelta(seconds=253)
+
     return [
-        _gen_message(movement_id, product_id, warehouse_id_arr, quantity, "arrival"),
-        _gen_message(movement_id, product_id, warehouse_id_dep, quantity, "departure"),
+        _gen_message(movement_id, product_id, warehouse_id_dep, quantity, "departure", send_time),
+        _gen_message(movement_id, product_id, warehouse_id_arr, quantity, "arrival", receive_time),
     ]
 
 

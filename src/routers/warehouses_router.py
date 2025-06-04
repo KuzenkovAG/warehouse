@@ -4,7 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Path
 
 from dependencies import ViewContainer
-from models.warehouses import ProductOutput, WarehouseFilter
+from models.product import ProductOutput, ProductFilter
 from services.warehouses_service import WarehousesService
 
 router = APIRouter(prefix="/api/warehouses", tags=["Warehouses"])
@@ -20,7 +20,7 @@ async def get_product(
     product_id: UUID = Path(..., description="id продукта"),
     service: WarehousesService = Depends(Provide[ViewContainer.warehouses_service]),
 ) -> ProductOutput:
-    item = WarehouseFilter(
+    item = ProductFilter(
         warehouse_id=warehouse_id,
         product_id=product_id,
     )

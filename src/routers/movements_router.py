@@ -4,7 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Path
 
 from dependencies import ViewContainer
-from models.movements import MovementFilter, MovementOutput
+from models.movements import MovementFilter, MovementOutput, MovementInfo
 from services.movements_service import MovementsService
 
 router = APIRouter(prefix="/api/movements", tags=["Movements"])
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/movements", tags=["Movements"])
 async def get(
     movement_id: UUID = Path(..., description="id перемещения"),
     service: MovementsService = Depends(Provide[ViewContainer.movements_service]),
-) -> list[MovementOutput]:
+) -> MovementInfo:
     item = MovementFilter(
         movement_id=movement_id,
     )
