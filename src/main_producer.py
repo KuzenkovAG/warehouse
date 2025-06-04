@@ -27,11 +27,11 @@ QUANTITY = list(range(1, 100))
 
 
 def _gen_message(
-    movement_id,
-    product_id,
-    warehouse_id,
-    quantity,
-    event,
+    movement_id: uuid.UUID,
+    product_id: uuid.UUID,
+    warehouse_id: uuid.UUID,
+    quantity: int,
+    event: str,
 ) -> dict[str, Any]:
     id_ = uuid.uuid4()
     time_ = datetime.now()
@@ -58,10 +58,10 @@ def _gen_message(
 
 def get_messages() -> list[dict]:
     movement_id = uuid.uuid4()
-    product_id = random.choice(PRODUCTS)
-    warehouse_id_dep = random.choice(WAREHOUSES)
-    warehouse_id_arr = random.choice([wh for wh in WAREHOUSES if wh != warehouse_id_dep])
-    quantity = random.choice(QUANTITY)
+    product_id = random.choice(PRODUCTS)  # noqa:S311
+    warehouse_id_dep = random.choice(WAREHOUSES)  # noqa:S311
+    warehouse_id_arr = random.choice([wh for wh in WAREHOUSES if wh != warehouse_id_dep])  # noqa:S311
+    quantity = random.choice(QUANTITY)  # noqa:S311
 
     return [
         _gen_message(movement_id, product_id, warehouse_id_arr, quantity, "arrival"),
@@ -69,7 +69,7 @@ def get_messages() -> list[dict]:
     ]
 
 
-async def send_message(producer):
+async def send_message(producer: AIOKafkaProducer) -> None:
     while True:
         try:
             messages = get_messages()
@@ -80,11 +80,11 @@ async def send_message(producer):
                 )
             await asyncio.sleep(1)
         except asyncio.CancelledError:
-            print("stop send message")
+            print("stop send message")  # noqa:T201
             break
 
 
-async def main():
+async def main() -> None:
     producer = AIOKafkaProducer(
         bootstrap_servers=settings.KAFKA_BOOTSTRAP,
     )

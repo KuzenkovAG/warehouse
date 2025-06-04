@@ -1,6 +1,6 @@
 import asyncio
 
-from aiokafka import AIOKafkaConsumer
+from aiokafka import AIOKafkaConsumer, ConsumerRecord, TopicPartition
 from aiokafka.errors import UnknownMemberIdError
 
 from settings import settings
@@ -33,7 +33,7 @@ class KafkaConsumer:
         """
         await self.consumer.commit(data)
 
-    async def get_batch(self):
+    async def get_batch(self) -> dict[TopicPartition, list[ConsumerRecord]]:
         """Получает батч сообщений."""
         return await self.consumer.getmany(
             timeout_ms=settings.KAFKA_TIMEOUT_MS,

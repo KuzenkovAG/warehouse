@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -17,3 +18,17 @@ class Warehouse(BaseModel):
             product_id=movement.product_id,
             quantity=movement.quantity,
         )
+
+
+class WarehouseFilter(BaseModel):
+    warehouse_id: UUID
+    product_id: UUID
+
+
+class ProductOutput(BaseModel):
+    id: UUID
+    warehouse_id: UUID
+    product_id: UUID
+    quantity: int
+    created_at: datetime
+    updated_at: datetime
